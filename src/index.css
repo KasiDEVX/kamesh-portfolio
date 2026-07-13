@@ -1,0 +1,397 @@
+@import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&display=swap');
+@config "../tailwind.config.js";
+@source "../index.html";
+@source "../src/components";
+
+@font-face {
+  font-family: 'Ortica';
+  src: url('./assets/fonts/OrticaLinear-Regular.woff2') format('woff2'),
+       url('./assets/fonts/OrticaLinear-Regular.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Ortica';
+  src: url('./assets/fonts/OrticaLinear-Light.woff2') format('woff2'),
+       url('./assets/fonts/OrticaLinear-Light.otf') format('opentype');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Ortica';
+  src: url('./assets/fonts/OrticaLinear-Bold.woff2') format('woff2'),
+       url('./assets/fonts/OrticaLinear-Bold.otf') format('opentype');
+  font-weight: bold;
+  font-style: normal;
+  font-display: swap;
+}
+
+@theme {
+  --color-background: var(--background-hex);
+  --color-surface: var(--surface-hex);
+  --color-accent: var(--accent-hex);
+  --color-neutral: var(--neutral-hex);
+  --color-highlight: var(--highlight-hex);
+
+  --color-bg-hero: var(--bg-hero);
+  --color-bg-primary: var(--bg-primary);
+  --color-bg-secondary: var(--bg-secondary);
+  --color-bg-elevated: var(--bg-elevated);
+  --color-bg-dark: var(--bg-dark);
+
+  --color-text-primary: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+  --color-text-muted: var(--text-muted);
+
+  --color-accent-primary: var(--accent-primary);
+  --color-accent-secondary: var(--accent-secondary);
+  --color-accent-hover: var(--accent-hover);
+
+  --font-display: var(--font-display), serif;
+  --font-body: var(--font-body), sans-serif;
+  --font-mono: var(--font-mono), monospace;
+  
+  --animate-fade-rise: fade-rise 800ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  
+  @keyframes fade-rise {
+    from {
+      opacity: 0;
+      transform: translateY(24px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+}
+
+:root {
+  --font-display: "Ortica", serif;
+  --font-body: "Inter", sans-serif;
+  --font-mono: "JetBrains Mono", monospace;
+
+  /* Warm forest / golden color system */
+  --bg-hero: #1A2B22;
+  --bg-primary: #19372D;
+  --bg-secondary: #153126;
+  --bg-elevated: #204234;
+  --bg-dark: #0E211A;
+
+  --text-primary: #F5F0DE;
+  --text-secondary: #D8CCB5;
+  --text-muted: #9BA28C;
+
+  --accent-primary: #D4BE72;
+  --accent-secondary: #A5B36C;
+  --accent-hover: #E4D29B;
+
+  --border-light: rgba(245, 240, 222, 0.12);
+  --border-medium: rgba(245, 240, 222, 0.18);
+
+  --glass-bg: rgba(255, 255, 255, 0.06);
+  --glass-border: rgba(255, 255, 255, 0.18);
+
+  --overlay-dark: rgba(15, 20, 15, 0.32);
+  --overlay-gradient-top: rgba(18, 30, 24, 0.15);
+  --overlay-gradient-bottom: #19372D;
+
+  --shadow-soft: rgba(0, 0, 0, 0.18);
+  --shadow-medium: rgba(0, 0, 0, 0.28);
+
+  /* Legacy mappings to preserve existing styles */
+  --background-hex: var(--bg-primary);
+  --surface-hex: var(--bg-secondary);
+  --accent-hex: var(--accent-primary);
+  --neutral-hex: var(--text-primary);
+  --highlight-hex: var(--accent-secondary);
+
+  /* HSL Values */
+  --background: 154 36% 16%;
+  --surface: 155 40% 14%;
+  --accent: 47 54% 64%;
+  --neutral: 47 48% 92%;
+  --highlight: 71 30% 56%;
+}
+
+html, body, #root {
+  background-color: #19372D;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background-color: var(--background-hex);
+  color: var(--neutral-hex);
+  font-family: var(--font-body);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-display);
+  font-weight: normal;
+}
+
+/* Navbar Floating Glass Capsule */
+.navbar {
+  padding-top: 0;
+  padding-bottom: 0;
+  pointer-events: none;
+  width: 100%;
+}
+
+.nav-container {
+  pointer-events: auto;
+  position: relative;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0);
+  border: 1px solid transparent;
+  border-radius: 0px;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 1.5rem 2rem; /* py-6 at top */
+  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.navbar .logo-wrapper {
+  gap: 16px;
+  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.navbar .logo-img {
+  height: 72px; /* Prominent size at top */
+  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Scrolled Floating Pill State */
+.navbar.is-scrolled {
+  padding-top: 1rem; /* Floats down slightly */
+}
+
+.navbar.is-scrolled .nav-container {
+  background: var(--glass-bg);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--glass-border);
+  border-radius: 100px;
+  box-shadow: 0 20px 40px -10px var(--shadow-medium), inset 0 1px 1px rgba(255, 255, 255, 0.15);
+  max-width: 1100px; /* Capsule size */
+  padding: 0.75rem 2.5rem; /* Capsule padding */
+}
+
+/* Premium Liquid Glass Styling */
+.liquid-glass {
+  background: var(--glass-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--glass-border);
+  box-shadow: 0 8px 32px 0 var(--shadow-soft);
+}
+
+/* Ambient Sound Equalizer Visualizer Animations */
+@keyframes sound-bar-1 {
+  0%, 100% { height: 4px; }
+  50% { height: 12px; }
+}
+@keyframes sound-bar-2 {
+  0%, 100% { height: 8px; }
+  50% { height: 4px; }
+}
+@keyframes sound-bar-3 {
+  0%, 100% { height: 6px; }
+  50% { height: 12px; }
+}
+@keyframes sound-bar-4 {
+  0%, 100% { height: 10px; }
+  50% { height: 4px; }
+}
+
+.animate-sound-bar-1 {
+  animation: sound-bar-1 1.2s ease-in-out infinite;
+}
+.animate-sound-bar-2 {
+  animation: sound-bar-2 1.2s ease-in-out infinite 0.2s;
+}
+.animate-sound-bar-3 {
+  animation: sound-bar-3 1.2s ease-in-out infinite 0.4s;
+}
+.animate-sound-bar-4 {
+  animation: sound-bar-4 1.2s ease-in-out infinite 0.1s;
+}
+
+.navbar.is-scrolled .logo-wrapper {
+  gap: 12px;
+}
+
+.navbar.is-scrolled .logo-img {
+  height: 48px; /* Slightly smaller, but still readable 'big' size in capsule */
+}
+
+.navbar.is-scrolled .nav-container::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1.4px;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.45),
+    rgba(255, 255, 255, 0.15),
+    transparent,
+    transparent,
+    rgba(255, 255, 255, 0.15),
+    rgba(255, 255, 255, 0.45)
+  );
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+/* Custom fade-rise entry animations */
+.animate-fade-rise {
+  opacity: 0;
+  animation: fade-rise 800ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-fade-rise-delay {
+  opacity: 0;
+  animation: fade-rise 800ms cubic-bezier(0.16, 1, 0.3, 1) 200ms forwards;
+}
+
+.animate-fade-rise-delay-2 {
+  opacity: 0;
+  animation: fade-rise 800ms cubic-bezier(0.16, 1, 0.3, 1) 400ms forwards;
+}
+
+/* Lenis Scroll Smoothness */
+html.lenis, html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overflow: clip;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+.lenis.lenis-smooth iframe {
+  pointer-events: none;
+}
+
+/* Premium 3D Perspective Image Hover Effect */
+.panel-image-wrapper {
+  perspective: 1200px;
+  transform-style: preserve-3d;
+  box-shadow: 0 20px 45px -10px rgba(0, 0, 0, 0.4);
+  transition: box-shadow 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.panel-image-wrapper:hover {
+  box-shadow: 0 35px 65px -8px rgba(0, 0, 0, 0.55);
+}
+
+.panel-image-wrapper img {
+  transform: rotateY(-3deg) rotateX(1.5deg) scale(0.99);
+  transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1), filter 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  backface-visibility: hidden;
+}
+
+.panel-image-wrapper:hover img {
+  transform: rotateY(0deg) rotateX(0deg) scale(1.03) translateZ(10px);
+}
+
+/* ═══════════════════════════════════════════════
+   FOOTER REVEAL — Animated Cloud Layers
+   Pure CSS clouds using radial-gradient blobs
+   ═══════════════════════════════════════════════ */
+
+.footer-cloud {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  will-change: transform;
+  background-repeat: repeat-x;
+  background-size: 200% 100%;
+}
+
+/* Layer 1: large, slow, warm-tinted clouds */
+.footer-cloud--1 {
+  background-image:
+    radial-gradient(ellipse 35% 55% at 15% 45%, rgba(212, 190, 114, 0.14) 0%, transparent 70%),
+    radial-gradient(ellipse 40% 50% at 55% 55%, rgba(165, 179, 108, 0.10) 0%, transparent 65%),
+    radial-gradient(ellipse 30% 45% at 85% 40%, rgba(212, 190, 114, 0.12) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 60% at 35% 60%, rgba(245, 240, 222, 0.06) 0%, transparent 70%),
+    radial-gradient(ellipse 45% 50% at 70% 35%, rgba(212, 190, 114, 0.08) 0%, transparent 65%);
+  animation: cloud-drift-1 28s linear infinite;
+  opacity: 0.9;
+}
+
+/* Layer 2: medium, offset drift, cooler tones */
+.footer-cloud--2 {
+  background-image:
+    radial-gradient(ellipse 30% 50% at 25% 50%, rgba(245, 240, 222, 0.10) 0%, transparent 65%),
+    radial-gradient(ellipse 45% 55% at 65% 45%, rgba(212, 190, 114, 0.09) 0%, transparent 60%),
+    radial-gradient(ellipse 35% 40% at 45% 60%, rgba(165, 179, 108, 0.11) 0%, transparent 70%),
+    radial-gradient(ellipse 25% 45% at 80% 55%, rgba(245, 240, 222, 0.07) 0%, transparent 60%);
+  animation: cloud-drift-2 22s linear infinite;
+  opacity: 0.75;
+}
+
+/* Layer 3: foreground wisps, faster, more diffuse */
+.footer-cloud--3 {
+  background-image:
+    radial-gradient(ellipse 20% 35% at 20% 55%, rgba(245, 240, 222, 0.12) 0%, transparent 55%),
+    radial-gradient(ellipse 25% 40% at 50% 45%, rgba(212, 190, 114, 0.10) 0%, transparent 50%),
+    radial-gradient(ellipse 30% 35% at 75% 50%, rgba(245, 240, 222, 0.08) 0%, transparent 55%),
+    radial-gradient(ellipse 18% 30% at 90% 60%, rgba(212, 190, 114, 0.14) 0%, transparent 50%);
+  animation: cloud-drift-3 16s linear infinite;
+  opacity: 0.6;
+}
+
+@keyframes cloud-drift-1 {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+@keyframes cloud-drift-2 {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(50%); }
+}
+
+@keyframes cloud-drift-3 {
+  0%   { transform: translateX(0) scaleY(1); }
+  50%  { transform: translateX(-25%) scaleY(1.08); }
+  100% { transform: translateX(-50%) scaleY(1); }
+}
+
+/* Subtle pulsing glow on the footer section itself */
+.footer-reveal::after {
+  content: '';
+  position: absolute;
+  bottom: 30%;
+  left: 50%;
+  width: 60vw;
+  height: 40vh;
+  transform: translateX(-50%);
+  background: radial-gradient(ellipse at center, rgba(212, 190, 114, 0.03) 0%, transparent 65%);
+  pointer-events: none;
+  animation: footer-glow-pulse 8s ease-in-out infinite alternate;
+}
+
+@keyframes footer-glow-pulse {
+  0%   { opacity: 0.4; transform: translateX(-50%) scale(0.95); }
+  100% { opacity: 1; transform: translateX(-50%) scale(1.05); }
+}
