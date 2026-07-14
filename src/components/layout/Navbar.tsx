@@ -154,7 +154,7 @@ export const Navbar: React.FC = () => {
             transition: `opacity 400ms ease ${NAV_LINKS.length * 60 + 60}ms`,
           }}
         >
-          <a href="https://github.com/KameshDEVX/profile" target="_blank" rel="noreferrer" className="hover:text-[#F5F0DE] transition-colors">GitHub</a>
+          <a href="https://github.com/kameshoffcl-code" target="_blank" rel="noreferrer" className="hover:text-[#F5F0DE] transition-colors">GitHub</a>
           <a href="https://www.linkedin.com/in/kamesh-r-702497339/" target="_blank" rel="noreferrer" className="hover:text-[#F5F0DE] transition-colors">LinkedIn</a>
           <a href="mailto:kamesh.offcl@gmail.com" className="hover:text-[#F5F0DE] transition-colors">Email</a>
         </div>

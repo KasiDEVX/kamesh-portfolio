@@ -99,7 +99,7 @@ export const Introduction: React.FC = () => {
 
               {[
                 {
-                  year: '2023 – 2027',
+                  year: '2024 – 2028',
                   institution: 'Ramco Institute of Technology, Rajapalayam',
                   title: 'Bachelor of Engineering in Computer Science and Business Systems',
                   desc: 'Currently in my 3rd year. Focused on computing fundamentals, software architectures, database systems, and business operations.',
@@ -107,7 +107,7 @@ export const Introduction: React.FC = () => {
                   isCurrent: true
                 },
                 {
-                  year: '2011 – 2023',
+                  year: '2011 – 2024',
                   institution: 'Spectrum Matric Hr Sec School, Elathur',
                   title: 'Primary & Secondary Education (1st – 12th Grade)',
                   desc: 'Completed secondary schooling with a major focus on mathematics, physics, and computer science foundations.',
