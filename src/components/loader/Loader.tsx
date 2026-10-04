@@ -3,7 +3,6 @@ import { AnimatePresence, motion } from 'framer-motion';
 import heroFallback from '@/assets/hero_fallback.jpg';
 import heroVideo from '@/assets/hero.webm';
 import { useAudio } from '@/context/AudioContext';
-import { useIsLowEnd, usePrefersReducedMotion } from '@/hooks/use-device-capability';
 
 const WORD = 'KAMESH';
 const LETTER_STAGGER = 0.085;
@@ -41,8 +40,6 @@ const Loader: React.FC<LoaderProps> = ({ onExitComplete }) => {
   const [phase, setPhase] = useState<'idle' | 'letters' | 'mask' | 'expand'>('idle');
   const [assetReady, setAssetReady] = useState(false);
   const [progress, setProgress] = useState(0);
-  const prefersReducedMotion = usePrefersReducedMotion();
-  const isLowEnd = useIsLowEnd();
   const preloadVideoRef = useRef<HTMLVideoElement>(null);
   const { isMuted, toggleSound } = useAudio();
 
@@ -59,43 +56,48 @@ const Loader: React.FC<LoaderProps> = ({ onExitComplete }) => {
   }, []);
 
   useEffect(() => {
-    if (prefersReducedMotion || isLowEnd) {
-      const timer = window.setTimeout(() => {
-        onExitComplete();
-      }, 120);
-
-      return () => window.clearTimeout(timer);
+    const video = preloadVideoRef.current;
+    if (video) {
+      video.muted = true;
+      video.defaultMuted = true;
+      video.play().catch(() => {});
     }
 
-    const video = preloadVideoRef.current;
-    if (!video) return;
+    // Ensure loader starts promptly even if video is buffering
+    const fallbackTimer = window.setTimeout(() => {
+      setAssetReady(true);
+    }, 200);
 
     const handleReady = () => {
       setAssetReady(true);
-      video.play().catch(() => {});
+      if (video) video.play().catch(() => {});
     };
 
     const handleError = () => {
       setAssetReady(true);
     };
 
-    if (video.readyState >= HTMLMediaElement.HAVE_CURRENT_DATA) {
-      handleReady();
+    if (video) {
+      if (video.readyState >= HTMLMediaElement.HAVE_CURRENT_DATA) {
+        handleReady();
+      }
+      video.addEventListener('loadeddata', handleReady);
+      video.addEventListener('canplay', handleReady);
+      video.addEventListener('error', handleError);
     }
 
-    video.addEventListener('loadeddata', handleReady);
-    video.addEventListener('canplay', handleReady);
-    video.addEventListener('error', handleError);
-
     return () => {
-      video.removeEventListener('loadeddata', handleReady);
-      video.removeEventListener('canplay', handleReady);
-      video.removeEventListener('error', handleError);
+      window.clearTimeout(fallbackTimer);
+      if (video) {
+        video.removeEventListener('loadeddata', handleReady);
+        video.removeEventListener('canplay', handleReady);
+        video.removeEventListener('error', handleError);
+      }
     };
-  }, [onExitComplete, prefersReducedMotion, isLowEnd]);
+  }, []);
 
   useEffect(() => {
-    if (prefersReducedMotion || !assetReady) return;
+    if (!assetReady) return;
 
     setPhase('letters');
     setProgress(0.8);
@@ -122,11 +124,7 @@ const Loader: React.FC<LoaderProps> = ({ onExitComplete }) => {
       window.clearTimeout(expandTimer);
       window.clearTimeout(completeTimer);
     };
-  }, [assetReady, onExitComplete, prefersReducedMotion]);
-
-  if (prefersReducedMotion) {
-    return null;
-  }
+  }, [assetReady, onExitComplete]);
 
   return (
     <motion.div
@@ -161,7 +159,14 @@ const Loader: React.FC<LoaderProps> = ({ onExitComplete }) => {
           autoPlay
           muted
           playsInline
-          preload={isLowEnd ? 'metadata' : 'auto'}
+          preload="auto"
+          ref={(el) => {
+            if (el) {
+              el.muted = true;
+              el.defaultMuted = true;
+              el.play().catch(() => {});
+            }
+          }}
           className="absolute inset-0 h-full w-full object-cover opacity-72"
         >
           <source src={heroVideo} type="video/webm" />
@@ -342,7 +347,7 @@ const Loader: React.FC<LoaderProps> = ({ onExitComplete }) => {
         autoPlay
         muted
         playsInline
-        preload={isLowEnd ? 'metadata' : 'auto'}
+        preload="auto"
         className="absolute h-0 w-0 opacity-0"
       >
         <source src={heroVideo} type="video/webm" />

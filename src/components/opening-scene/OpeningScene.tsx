@@ -3,18 +3,12 @@ import { useGSAP } from '@gsap/react';
 import { initHeroScrollAnimation, initHeroEntrance } from '@/animations/hero';
 import heroVideo from '@/assets/hero.webm';
 import heroFallback from '@/assets/hero_fallback.jpg';
-import { useDeviceCapability } from '@/hooks/use-device-capability';
 
 export const OpeningScene: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const videoWrapperRef = useRef<HTMLDivElement>(null);
   const contentWrapperRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
-
-  const { prefersReducedMotion } = useDeviceCapability();
-  // Only skip video for prefers-reduced-motion, not for isLowEnd
-  // Modern laptops (even with 4 cores / 4GB reported) can handle video
-  const shouldSkipVideo = prefersReducedMotion;
 
   const [videoStatus, setVideoStatus] = useState<'playing' | 'fading' | 'ended'>('playing');
   const videoStatusRef = useRef(videoStatus);
@@ -31,11 +25,17 @@ export const OpeningScene: React.FC = () => {
     }
   }, [videoStatus]);
 
+  // Ensure DOM muted property is set so browser autoplay policy is satisfied
+  useEffect(() => {
+    if (videoRef.current) {
+      videoRef.current.muted = true;
+      videoRef.current.defaultMuted = true;
+      videoRef.current.play().catch(() => {});
+    }
+  }, []);
 
   // IntersectionObserver to track if hero is in viewport
   useEffect(() => {
-    if (shouldSkipVideo) return;
-
     const observer = new IntersectionObserver(
       ([entry]) => {
         setIsIntersecting(entry.isIntersecting);
@@ -60,20 +60,21 @@ export const OpeningScene: React.FC = () => {
     return () => {
       observer.disconnect();
     };
-  }, [shouldSkipVideo]);
+  }, []);
 
   // Handle play/pause programmatically based on viewport intersection
   useEffect(() => {
-    if (!videoRef.current || shouldSkipVideo) return;
+    if (!videoRef.current) return;
     
     if (isIntersecting) {
       if (videoStatusRef.current === 'playing') {
+        videoRef.current.muted = true;
         videoRef.current.play().catch(() => {});
       }
     } else {
       videoRef.current.pause();
     }
-  }, [isIntersecting, shouldSkipVideo]);
+  }, [isIntersecting]);
 
   useGSAP(() => {
     if (!containerRef.current || !videoWrapperRef.current || !contentWrapperRef.current) return;
@@ -109,8 +110,8 @@ export const OpeningScene: React.FC = () => {
           className="absolute inset-0 w-full h-full object-cover z-0 origin-center bg-[#1A2B22] overflow-hidden"
           style={{ willChange: 'transform, border-radius' }}
         >
-          {/* Static Fallback Image - Always rendered if video ended, fading, loading, or if motion preferences skip video */}
-          {(shouldSkipVideo || !isVideoPlaying || videoStatus === 'ended' || videoStatus === 'fading') && (
+          {/* Static Fallback Image - Rendered if video ended, fading, or still loading */}
+          {(!isVideoPlaying || videoStatus === 'ended' || videoStatus === 'fading') && (
             <img
               src={heroFallback}
               alt="Hero static background"
@@ -120,7 +121,7 @@ export const OpeningScene: React.FC = () => {
           )}
 
           {/* Video - Rendered only when active, fades out smoothly */}
-          {!shouldSkipVideo && videoStatus !== 'ended' && (
+          {videoStatus !== 'ended' && (
             <video
               ref={videoRef}
               autoPlay

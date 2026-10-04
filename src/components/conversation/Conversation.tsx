@@ -72,7 +72,7 @@ export const Conversation: React.FC = () => {
       {/* Contact Section — fades out as visitor scrolls deeper */}
       <div ref={fadeContentRef} className="w-full py-24 md:py-36 bg-transparent border-t border-neutral/5">
         <div className="max-w-[1280px] mx-auto px-8 grid grid-cols-1 lg:grid-cols-12 gap-16">
-          
+
           {/* Left Column */}
           <div className="lg:col-span-3">
             <div className="sticky top-32 flex flex-col gap-2">
@@ -271,7 +271,7 @@ export const Conversation: React.FC = () => {
             <a href="mailto:kamesh.offcl@gmail.com" className="cursor-target hover:text-[#F5F0DE] transition-colors">Email</a>
           </div>
 
-          <span className="font-body text-xs">&copy; 2026 Kasi Vishwanathan P.</span>
+          <span className="font-body text-xs">&copy; 2026 Kamesh R.</span>
         </div>
       </footer>
     </section>

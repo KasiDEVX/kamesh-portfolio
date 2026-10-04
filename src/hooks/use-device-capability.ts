@@ -38,8 +38,7 @@ export const useDeviceCapability = (): DeviceCapability => {
       const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
       // Low-end criteria:
-      // - Mobile device with slow connection OR prefers reduced motion
-      // - Desktop: only if prefers reduced motion (don't penalize for core/RAM reporting)
+      // - Mobile device with slow connection or very limited memory/CPU
       const isLowEnd = 
         isMobile && (
           hardwareConcurrency <= 4 ||
@@ -47,8 +46,7 @@ export const useDeviceCapability = (): DeviceCapability => {
           connectionType === 'slow-2g' ||
           connectionType === '2g' ||
           connectionType === '3g'
-        ) ||
-        prefersReducedMotion;
+        );
 
       setCapability({
         isLowEnd,
